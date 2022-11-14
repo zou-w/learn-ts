@@ -420,10 +420,13 @@ module.exports = {
                   //指定环境的插件
                   "@babel/preset-env",
                   {
+                    //兼容的目标浏览器
                     targets: {
                       chrome: "88",
                     },
+                    //指定corejs的版本
                     corejs: "3",
+                    //使用corejs的方式:按需加载
                     useBuiltIns: "usage",
                   },
                 ],
