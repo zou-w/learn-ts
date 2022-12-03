@@ -441,3 +441,380 @@ module.exports = {
     ],
 ```
 
+## 5.类
+
+**定义类:**
+
+```ts
+class Person{
+    name: string;
+    age: number;
+
+    constructor(name: string, age: number){
+        this.name = name;
+        this.age = age;
+    }
+
+    sayHello(){
+        console.log(`大家好，我是${this.name}`);
+    }
+}
+```
+
+**使用:**
+
+```ts
+const p = new Person('孙悟空', 18);
+p.sayHello();
+```
+
+### 1.封装
+
+#### **1.属性:**
+
+- public(默认值),均可修改
+
+```ts
+class Person{
+    public name: string; // 写或什么都不写都是public
+    public age: number;
+
+    constructor(name: string, age: number){
+        this.name = name; // 可以在类中修改
+        this.age = age;
+    }
+
+    sayHello(){
+        console.log(`大家好，我是${this.name}`);
+    }
+}
+
+class Employee extends Person{
+    constructor(name: string, age: number){
+        super(name, age);
+        this.name = name; //子类中可以修改
+    }
+}
+
+const p = new Person('孙悟空', 18);
+p.name = '猪八戒';// 可以通过对象修改
+```
+
+- protected
+
+```ts
+class Person{
+    protected name: string;
+    protected age: number;
+
+    constructor(name: string, age: number){
+        this.name = name; // 可以修改
+        this.age = age;
+    }
+
+    sayHello(){
+        console.log(`大家好，我是${this.name}`);
+    }
+}
+
+class Employee extends Person{
+
+    constructor(name: string, age: number){
+        super(name, age);
+        this.name = name; //子类中可以修改
+    }
+}
+
+const p = new Person('孙悟空', 18);
+p.name = '猪八戒';// 不能修改
+```
+
+- private,只能内部修改
+
+```ts
+class Person{
+    private name: string;
+    private age: number;
+
+    constructor(name: string, age: number){
+        this.name = name; // 可以修改
+        this.age = age;
+    }
+
+    sayHello(){
+        console.log(`大家好，我是${this.name}`);
+    }
+}
+
+class Employee extends Person{
+
+    constructor(name: string, age: number){
+        super(name, age);
+        this.name = name; //子类中不能修改
+    }
+}
+
+const p = new Person('孙悟空', 18);
+p.name = '猪八戒';// 不能修改
+```
+
+#### **2.属性存取器(private中常用):**
+
+读取属性的方法叫做**setter**方法，设置属性的方法叫做**getter**方法
+
+```ts
+class Person{
+    private _name: string;
+
+    constructor(name: string){
+        this._name = name;
+    }
+
+    get name(){
+        return this._name;
+    }
+
+    set name(name: string){
+        this._name = name;
+    }
+
+}
+
+const p1 = new Person('孙悟空');
+console.log(p1.name); // 通过getter读取name属性
+p1.name = '猪八戒'; // 通过setter修改name属性
+```
+
+#### 3.静态属性
+
+- 静态属性（方法），也称为类属性。使用静态属性无需创建实例，通过类即可直接使用
+
+- 静态属性（方法）使用static开头
+
+```ts
+class Tools{
+    static PI = 3.1415926;
+    
+    static sum(num1: number, num2: number){
+        return num1 + num2
+    }
+}
+
+console.log(Tools.PI);
+console.log(Tools.sum(123, 456));
+```
+
+#### 4.继承
+
+**将其他类中的属性和方法引入到当前类中**
+
+```ts
+class Animal{
+    name: string;
+    age: number;
+
+    constructor(name: string, age: number){
+        this.name = name;
+        this.age = age;
+    }
+}
+
+class Dog extends Animal{
+
+    bark(){
+        console.log(`${this.name}在汪汪叫！`);
+    }
+}
+
+const dog = new Dog('旺财', 4);
+dog.bark();
+```
+
+**重写:**
+
+发生继承时，如果子类中的方法会替换掉父类中的同名方法，这就称为方法的重写
+
+```ts
+class Animal{
+    name: string;
+    age: number;
+
+    constructor(name: string, age: number){
+        this.name = name;
+        this.age = age;
+    }
+
+    run(){
+        console.log(`父类中的run方法！`);
+    }
+}
+
+class Dog extends Animal{
+
+    bark(){
+        console.log(`${this.name}在汪汪叫！`);
+    }
+
+    run(){
+        console.log(`子类中的run方法，会重写父类中的run方法！`);
+    }
+}
+
+const dog = new Dog('旺财', 4);
+dog.bark();
+```
+
+#### 5.super
+
+在子类中可以使用super来完成对父类的引用
+
+```ts
+class Animal {
+    name: string;
+    age: number;
+
+    constructor(name: string, age: number) {
+      this.name = name;
+      this.age = age;
+    }
+
+    sayHello() {
+      console.log("动物在叫");
+    }
+  }
+
+  //Dog继承Animal
+  class Dog extends Animal {
+    address: string;
+    constructor(name: string, age: number, address: string) {
+      //如果要新增属性,必需要调用super
+      super(name, age);
+      this.address = address;
+    }
+  }
+
+  const dog = new Dog("旺财", 5, "cqupt");
+  console.log(dog);
+  dog.sayHello();
+```
+
+#### 6.抽象类
+
+**专门用来被其他类所继承的类，它只能被其他类所继承不能用来创建实例**
+
+使用**abstract**开头
+
+使用**abstract**开头的方法叫做抽象方法，抽象方法没有方法体只能定义在抽象类中，继承抽象类时抽象方法必须要实现
+
+```ts
+abstract class Animal{
+    abstract run(): void;
+    bark(){
+        console.log('动物在叫~');
+    }
+}
+
+class Dog extends Animals{
+    run(){
+        console.log('狗在跑~');
+    }
+}
+```
+
+## 6.接口
+
+**描述一个对象的类型**
+
+- 定义一个类结构
+- 类型声明去使用,可以重复声明
+- 接口里面所有属性都不能有实际的值
+
+```ts
+ interface myInterface {
+    name: string;
+    age: number;
+  }
+
+  interface myInterface {
+    gender: string;
+  }
+
+  interface myInter {
+    name: string;
+    sayHello(): void;
+  }
+
+  const obj: myInterface = {
+    name: "张三",
+    age: 12,
+    gender: "男",
+  };
+
+ const obj1: myInter = {
+    name: "李四",
+
+    sayHello() {
+      console.log(this.name);
+    },
+  };
+```
+
+定义类时,使类实现一个接口(满足接口的要求)
+
+```ts
+ interface myInter {
+    name: string;
+    sayHello(): void;
+  }
+
+class myClass implements myInter {
+    name: string;
+    constructor(name: string) {
+      this.name = name;
+    }
+    sayHello(): void {
+      console.log("类 and 接口");
+    }
+  }
+  const obj2 = new myClass("other");
+  console.log(obj2);
+```
+
+## 7.泛型
+
+定义类型不明确时 ,使用泛型
+
+```TS
+function fn<T>(a: T): T {
+  return a;
+}
+
+let res1 = fn(10); //不指定泛型
+let res2 = fn<string>("hello"); //指定泛型
+```
+
+类中使用:
+
+```ts
+class MyClass<T>{
+    prop: T;
+
+    constructor(prop: T){
+        this.prop = prop;
+    }
+}
+```
+
+对泛型进行约束:
+
+```ts
+interface MyInter{
+    length: number;
+}
+
+function test<T extends MyInter>(arg: T): number{
+    return arg.length;
+}
+```
+
+使用T extends MyInter表示泛型T必须是MyInter的子类，不一定非要使用接口类和抽象类同样适用。
